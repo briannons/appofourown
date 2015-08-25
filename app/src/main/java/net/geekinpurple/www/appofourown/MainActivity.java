@@ -1,7 +1,9 @@
 package net.geekinpurple.www.appofourown;
 
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -12,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 
 import net.geekinpurple.www.appofourown.R;
 
@@ -23,26 +26,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            Document ao3 =  Jsoup.connect(homeUrl).get();
-            Elements media = ao3.getElementsByClass("browse");
-            Element ele = media.get(0);  // there should only be one class "browse"
-            media = ele.getElementsByTag("a");
-            StringBuffer message = new StringBuffer();
-            for (Element medium : media) {
-                message.append(medium.data()).append('\n');
-            }
-
-            TextView textView = new TextView(this);
-            textView.setTextSize(18);
-            textView.setText(message);
-        }
-        catch (IOException aeiou) {  // I was going to use ioe. heh, all that's missing is au
-            TextView textView = new TextView(this);
-            textView.setTextSize(18);
-            textView.setText("Sorry!");
-        }
-
+        new Retrieval().execute(homeUrl);
     }
 
     @Override
@@ -65,5 +49,39 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class Retrieval extends AsyncTask<String, Void, String> {
+        Document doc;
+
+        @Override
+        protected String doInBackground(String... params) {
+            String url = params[0];
+            try {
+                Document ao3 =  Jsoup.connect(url).get();
+                Elements media = ao3.getElementsByClass("browse");
+                Element ele = media.get(0);  // there should only be one class "browse"
+
+                media = ele.getElementsByTag("a");
+                StringBuffer message = new StringBuffer();
+                for (Element medium : media) {
+                    Log.d("none", medium.toString());
+                    message.append(medium.text()).append('\n');
+                }
+
+                String result = message.toString();
+                Log.d("none", result);
+                return result;
+            }
+            catch (IOException aeiou) {  // I was going to use ioe. heh, all that's missing is au
+                return "Sorry!";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            TextView textView = (TextView) findViewById(R.id.options);
+            textView.setText(result);
+        }
     }
 }
