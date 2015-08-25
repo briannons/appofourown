@@ -65,12 +65,10 @@ public class MainActivity extends ActionBarActivity {
                 media = ele.getElementsByTag("a");
                 StringBuffer message = new StringBuffer();
                 for (Element medium : media) {
-                    Log.d("none", medium.toString());
                     message.append(medium.text()).append('\n');
                 }
 
                 String result = message.toString();
-                Log.d("none", result);
                 return result;
             }
             catch (IOException aeiou) {  // I was going to use ioe. heh, all that's missing is au
