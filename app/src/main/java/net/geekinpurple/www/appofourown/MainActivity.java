@@ -1,11 +1,14 @@
 package net.geekinpurple.www.appofourown;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -14,12 +17,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URLEncoder;
 
 import net.geekinpurple.www.appofourown.R;
 
 public class MainActivity extends ActionBarActivity {
     String homeUrl = "https://archiveofourown.org";
+    public final static String EXTRA_SEARCH_URL = "net.geekinpurple.www.appofourown.QUERY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,21 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void throwSearch(View view) {
+        try {
+            Intent intent = new Intent(this, SearchResults.class);
+            EditText editText = (EditText) findViewById(R.id.searchQuery);
+            String query = editText.getText().toString();
+            query = URLEncoder.encode(query, "UTF-8");
+            String urlBase = new String("http://archiveofourown.org/works/search?utf8=%E2%9C%93&work_search%5Bquery%5D=");
+            String queryUrl = urlBase.concat(query);
+            intent.putExtra(EXTRA_SEARCH_URL, queryUrl);
+            startActivity(intent);
+        }
+        catch (Exception e) {
+        }
     }
 
     private class Retrieval extends AsyncTask<String, Void, String> {

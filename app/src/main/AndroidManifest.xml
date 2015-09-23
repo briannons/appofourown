@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.geekinpurple.www.appofourown" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,26 +12,25 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ReadingPage"
             android:configChanges="orientation|keyboardHidden|screenSize"
-
             android:theme="@style/FullscreenTheme" >
-
         </activity>
         <activity
             android:name=".SideMenu"
             android:label="@string/title_activity_side_menu" >
         </activity>
-
+        <activity
+            android:name=".SearchResults"
+            android:label="@string/title_activity_search_results" >
+        </activity>
     </application>
 
 </manifest>
