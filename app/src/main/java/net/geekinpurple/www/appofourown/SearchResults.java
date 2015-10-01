@@ -9,12 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import net.geekinpurple.www.appofourown.util.Work;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Vector;
 
 public class SearchResults extends AppCompatActivity {
 
@@ -62,13 +65,15 @@ public class SearchResults extends AppCompatActivity {
                 Elements works = ao3.getElementsByClass("blurb");
 
                 StringBuffer message = new StringBuffer();
-                for (Element work : works) { // for each story
-                    Elements workLinks = work.getElementsByTag("a");
-                    Element title = workLinks.get(0); // work title
-                    message.append(title.text()).append('\n');
+
+                // Build the array to hand to ListView
+                Vector<Work> worksVector = new Vector<Work>();
+                for (Element work : works) {
+                    Work w = new Work(work);
+                    worksVector.add(w);
+                    message.append(w.toString());
                 }
 
-                Log.d("something", message.toString());
                 String result = message.toString();
                 return result;
             }

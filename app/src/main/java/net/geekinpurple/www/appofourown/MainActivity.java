@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 import net.geekinpurple.www.appofourown.R;
 
 public class MainActivity extends ActionBarActivity {
-    String homeUrl = "https://archiveofourown.org";
+    public final static String homeUrl = "https://archiveofourown.org";
     public final static String EXTRA_SEARCH_URL = "net.geekinpurple.www.appofourown.QUERY";
 
     @Override
