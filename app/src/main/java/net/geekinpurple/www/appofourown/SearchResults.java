@@ -1,5 +1,6 @@
 package net.geekinpurple.www.appofourown;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import net.geekinpurple.www.appofourown.util.Work;
@@ -17,9 +20,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
-public class SearchResults extends AppCompatActivity {
+public class SearchResults extends ListActivity {
+    ArrayAdapter result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class SearchResults extends AppCompatActivity {
         Intent intent = getIntent();
         String url = intent.getStringExtra(MainActivity.EXTRA_SEARCH_URL);
 
+        result = new ArrayAdapter(this, R.layout.individual_work, R.id.details);
         new Retrieval().execute(url);
     }
 
@@ -54,38 +59,35 @@ public class SearchResults extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Retrieval extends AsyncTask<String, Void, String> {
-        Document doc;
-
+    private class Retrieval extends AsyncTask<String, Void, ArrayList<Work>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected ArrayList<Work> doInBackground(String... params) {
             String url = params[0];
             try {
-                Document ao3 =  Jsoup.connect(url).get();
-                Elements works = ao3.getElementsByClass("blurb");
+                Document doc =  Jsoup.connect(url).get();
+                Elements works = doc.getElementsByClass("blurb");
 
                 StringBuffer message = new StringBuffer();
 
-                // Build the array to hand to ListView
-                Vector<Work> worksVector = new Vector<Work>();
+                // Build the array to hand to ArrayAdapter
+                ArrayList<Work> worksVector = new ArrayList<Work>();
                 for (Element work : works) {
                     Work w = new Work(work);
                     worksVector.add(w);
                     message.append(w.toString());
                 }
 
-                String result = message.toString();
-                return result;
+                return worksVector;
             }
             catch (IOException aeiou) {
-                return "Sorry!";
+                return new ArrayList<Work>();
             }
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            TextView textView = (TextView) findViewById(R.id.results);
-            textView.setText(result);
+        protected void onPostExecute(ArrayList<Work> works) {
+            result.addAll(works);
+            setListAdapter(result);
         }
     }
 }

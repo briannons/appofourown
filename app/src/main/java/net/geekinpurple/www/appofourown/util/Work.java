@@ -24,7 +24,7 @@ public class Work {
     private Rating rating;
     private Category category;
     private Warnings warnings;
-    private Status state;
+    private Status status;
 
     public Work() {}
     public Work(Element work) {
@@ -54,7 +54,6 @@ public class Work {
                 this.rating = Rating.N;
                 break;
         }
-        Log.d("rating", this.rating.toString());
 
         String cat = work.getElementsByClass("category").get(0).text();
         switch (cat) {
@@ -80,7 +79,6 @@ public class Work {
                 this.category = Category.MULTI;
                 break;
         }
-        Log.d("category", this.category.toString());
 
         Element desc = work.getElementsByClass("summary").get(0);
         this.summary = desc.text();
@@ -88,10 +86,8 @@ public class Work {
 
     @Override
     public String toString() {
-       /* StringBuffer str = new StringBuffer(title);
+        StringBuffer str = new StringBuffer(title);
         str.append("\n").append(author).append("\n");
-        str.append(summary);*/
-
 
         return this.title;
     }
