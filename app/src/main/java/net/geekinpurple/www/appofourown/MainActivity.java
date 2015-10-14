@@ -22,7 +22,7 @@ import java.net.URLEncoder;
 import net.geekinpurple.www.appofourown.R;
 
 public class MainActivity extends ActionBarActivity {
-    public final static String homeUrl = "https://archiveofourown.org";
+    protected final static String homeUrl = "https://archiveofourown.org";
     public final static String EXTRA_SEARCH_URL = "net.geekinpurple.www.appofourown.QUERY";
 
     @Override
@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
             query = URLEncoder.encode(query, "UTF-8");
             String urlBase = new String("http://archiveofourown.org/works/search?utf8=%E2%9C%93&work_search%5Bquery%5D=");
             String queryUrl = urlBase.concat(query);
+            Log.d("testing", queryUrl);
             intent.putExtra(EXTRA_SEARCH_URL, queryUrl);
             startActivity(intent);
         }

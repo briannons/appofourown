@@ -8,11 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import net.geekinpurple.www.appofourown.util.Work;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,6 +56,15 @@ public class SearchResults extends ListActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Work message = (Work) l.getItemAtPosition(position);
+        Intent i = new Intent(this, WorkInstance.class);
+        i.putExtra("work", message);
+        Log.d("testing", message.toString());
+        startActivity(i);
     }
 
     private class Retrieval extends AsyncTask<String, Void, ArrayList<Work>> {

@@ -31,6 +31,10 @@
             android:name=".SearchResults"
             android:label="@string/title_activity_search_results" >
         </activity>
+        <activity
+            android:name=".WorkInstance"
+            android:label="@string/title_activity_work_instance" >
+        </activity>
     </application>
 
 </manifest>
