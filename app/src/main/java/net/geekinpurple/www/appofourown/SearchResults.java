@@ -71,25 +71,24 @@ public class SearchResults extends ListActivity {
         @Override
         protected ArrayList<Work> doInBackground(String... params) {
             String url = params[0];
-            try {
-                Document doc =  Jsoup.connect(url).get();
-                Elements works = doc.getElementsByClass("blurb");
-
-                StringBuffer message = new StringBuffer();
-
-                // Build the array to hand to ArrayAdapter
-                ArrayList<Work> worksVector = new ArrayList<Work>();
-                for (Element work : works) {
-                    Work w = new Work(work);
-                    worksVector.add(w);
-                    message.append(w.toString());
-                }
-
-                return worksVector;
-            }
-            catch (IOException aeiou) {
+            Document doc = WebPage.retrieve(url, this.getClass().toString());
+            if (doc == null) {
                 return new ArrayList<Work>();
             }
+
+            Elements works = doc.getElementsByClass("blurb");
+
+            StringBuffer message = new StringBuffer();
+
+            // Build the array to hand to ArrayAdapter
+            ArrayList<Work> worksList = new ArrayList<Work>();
+            for (Element work : works) {
+                Work w = new Work(work);
+                worksList.add(w);
+                message.append(w.toString());
+            }
+
+            return worksList;
         }
 
         @Override

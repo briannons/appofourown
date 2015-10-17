@@ -77,23 +77,19 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(String... params) {
             String url = params[0];
-            try {
-                Document ao3 =  Jsoup.connect(url).get();
-                Elements media = ao3.getElementsByClass("browse");
-                Element ele = media.get(0);  // there should only be one class "browse"
+            Document ao3 = WebPage.retrieve(url, this.getClass().toString());
 
-                media = ele.getElementsByTag("a");
-                StringBuffer message = new StringBuffer();
-                for (Element medium : media) {
-                    message.append(medium.text()).append('\n');
-                }
+            Elements media = ao3.getElementsByClass("browse");
+            Element ele = media.get(0);  // there should only be one class "browse"
 
-                String result = message.toString();
-                return result;
+            media = ele.getElementsByTag("a");
+            StringBuffer message = new StringBuffer();
+            for (Element medium : media) {
+                message.append(medium.text()).append('\n');
             }
-            catch (IOException aeiou) {  // I was going to use ioe. heh, all that's missing is au
-                return "Sorry!";
-            }
+
+            String result = message.toString();
+            return result;
         }
 
         @Override

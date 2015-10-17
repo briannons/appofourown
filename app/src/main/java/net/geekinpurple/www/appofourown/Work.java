@@ -56,7 +56,7 @@ public class Work implements Parcelable {
         }
 
         String cat = work.getElementsByClass("category").get(0).text();
-        switch (cat) {
+        switch (cat.toUpperCase()) {
             case "F/F":
                 this.category = Category.FF;
                 break;
@@ -66,13 +66,13 @@ public class Work implements Parcelable {
             case "M/M":
                 this.category = Category.MM;
                 break;
-            case "Gen":
+            case "GEN":
                 this.category = Category.GEN;
                 break;
-            case "No category":
+            case "NO CATEGORY":
                 this.category = Category.NONE;
                 break;
-            case "Other":
+            case "OTHER":
                 this.category = Category.OTHER;
                 break;
             default:
