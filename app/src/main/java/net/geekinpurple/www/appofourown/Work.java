@@ -36,18 +36,19 @@ public class Work implements Parcelable {
         this.author = workLinks.get(1).text();
         this.authorUrl = workLinks.get(1).attr("href");
 
+        // Parse for work's Rating
         String rate = work.getElementsByClass("rating").get(0).text();
-        switch (rate) {
-            case "General Audiences":
+        switch (rate.toLowerCase()) {
+            case "general audiences":
                 this.rating = Rating.G;
                 break;
-            case "Teen And Up Audiences":
+            case "teen and up audiences":
                 this.rating = Rating.T;
                 break;
-            case "Mature":
+            case "mature":
                 this.rating = Rating.M;
                 break;
-            case "Explicit: only suitable for adults":
+            case "explicit: only suitable for adults":
                 this.rating = Rating.E;
                 break;
             default:
@@ -55,6 +56,7 @@ public class Work implements Parcelable {
                 break;
         }
 
+        // Parse for work's Category (Ships)
         String cat = work.getElementsByClass("category").get(0).text();
         switch (cat.toUpperCase()) {
             case "F/F":
@@ -80,7 +82,26 @@ public class Work implements Parcelable {
                 break;
         }
 
-        this.warnings = Warnings.NONE;
+        // Parse for work's Warnings
+        Elements warnings = work.getElementsByClass("warnings");
+        String warn = warnings.get(0).toString();
+        Log.d("testing", warn);
+        switch (warn) {
+            case "warning-no":
+                this.warnings = Warnings.NONE;
+                break;
+            case "warning-yes":
+                this.warnings = Warnings.YES;
+                break;
+            case "warning-choosenotto":
+                this.warnings = Warnings.UNSPECIFIED;
+                break;
+            default:
+                this.warnings = Warnings.EXTERNAL;
+                break;
+        }
+
+        // Parse for work's Status
         this.status = Status.UNKNOWN;
 
         Element desc = work.getElementsByClass("summary").get(0);
@@ -111,8 +132,7 @@ public class Work implements Parcelable {
     protected int getRatingColor()
     {
         // {G, T, M, E, N}
-        switch (rating)
-        {
+        switch (rating) {
             case G:
                 return 0xFF77a100;
             case T:
@@ -123,6 +143,94 @@ public class Work implements Parcelable {
                 return 0xFF990000;
             default:
                 return 0xFFf9f9f9;
+        }
+    }
+
+    protected int getCategoryColor() {
+        switch (category) {
+            case FF:
+                return 0xFFa80016;
+            case FM:
+                return 0xFF5e0a3c;
+            case MM:
+                return 0xFF0146ad;
+            case GEN:
+                return 0xFF77a100;
+            case OTHER:
+                return 0xFF000000;
+            case MULTI:
+                return 0xFFe87604;
+            default:
+                return 0xFFFFFFFF;
+        }
+    }
+
+    protected String getCategorySymbol() {
+        switch (category) {
+            case FF:
+                return "\u2640";
+            case FM:
+                return "\u26A5";
+            case MM:
+                return "\u2642";
+            case GEN:
+                return "\u2299";
+            case OTHER:
+                return "\u2645";
+            case MULTI:
+                return "+";
+            default:
+                return "";
+        }
+    }
+
+    protected int getWarningsColor()
+    {
+        switch (warnings) {
+            case UNSPECIFIED:
+                return 0xFFe87604;
+            case YES:
+                return 0xFF990000;
+            case EXTERNAL:
+                return 0xFF026197;
+            default:
+                return 0xFFFFFFFF;
+        }
+    }
+
+    protected String getWarningsSymbol()
+    {
+        switch (warnings) {
+            case UNSPECIFIED:
+                return "\u203D";
+            case YES:
+                return "!";
+            case EXTERNAL:
+                return "\u2297";
+            default:
+                return "";
+        }
+    }
+
+    protected int getStatusColor() {
+        switch (status) {
+            case WIP:
+                return 0xFF990000;
+            case COMPLETE:
+                return 0xFF77a100;
+            default:
+                return 0xFFFFFFFF;
+        }
+    }
+
+    protected String getStatusSymbol() {
+        switch (status) {
+            case WIP:
+                return "\u2298";
+            case COMPLETE:
+                return "\u2713";
+            default:
+                return "";
         }
     }
 

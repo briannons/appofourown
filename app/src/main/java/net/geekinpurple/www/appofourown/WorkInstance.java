@@ -1,6 +1,7 @@
 package net.geekinpurple.www.appofourown;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,9 +22,29 @@ public class WorkInstance extends AppCompatActivity {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText(work.title);
 
+        // Set Rating Box Details
         TextView rating = (TextView) findViewById(R.id.rating);
         rating.setText(work.rating.toString());
+        rating.setTextColor(Color.WHITE);
         rating.setBackgroundColor(work.getRatingColor());
+
+        // Set Category Box Details
+        TextView category = (TextView) findViewById(R.id.category);
+        category.setText(work.getCategorySymbol());
+        category.setTextColor(Color.WHITE);
+        category.setBackgroundColor(work.getCategoryColor());
+
+        // Set Warnings Box Details
+        TextView warnings = (TextView) findViewById(R.id.warnings);
+        warnings.setText(work.getWarningsSymbol());
+        warnings.setTextColor(Color.WHITE);
+        warnings.setBackgroundColor(work.getWarningsColor());
+
+        // Set Status Box Details
+        TextView status = (TextView) findViewById(R.id.status);
+        status.setText(work.getStatusSymbol());
+        status.setTextColor(Color.WHITE);
+        status.setBackgroundColor(work.getStatusColor());
     }
 
     @Override
