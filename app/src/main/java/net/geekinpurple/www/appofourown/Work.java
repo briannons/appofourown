@@ -38,53 +38,20 @@ public class Work implements Parcelable {
 
         // Parse for work's Rating
         String rate = work.getElementsByClass("rating").get(0).text();
-        switch (rate.toLowerCase()) {
-            case "general audiences":
-                this.rating = Rating.G;
-                break;
-            case "teen and up audiences":
-                this.rating = Rating.T;
-                break;
-            case "mature":
-                this.rating = Rating.M;
-                break;
-            case "explicit: only suitable for adults":
-                this.rating = Rating.E;
-                break;
-            default:
-                this.rating = Rating.N;
-                break;
-        }
+        setRating(rate);
 
         // Parse for work's Category (Ships)
         String cat = work.getElementsByClass("category").get(0).text();
-        switch (cat.toUpperCase()) {
-            case "F/F":
-                this.category = Category.FF;
-                break;
-            case "F/M":
-                this.category = Category.FM;
-                break;
-            case "M/M":
-                this.category = Category.MM;
-                break;
-            case "GEN":
-                this.category = Category.GEN;
-                break;
-            case "NO CATEGORY":
-                this.category = Category.NONE;
-                break;
-            case "OTHER":
-                this.category = Category.OTHER;
-                break;
-            default:
-                this.category = Category.MULTI;
-                break;
-        }
+        setCategory(cat);
 
         // Parse for work's Warnings
         Elements warnings = work.getElementsByClass("warnings");
-        String warn = warnings.get(0).toString();
+        for (Element warning : warnings) {
+            String warn = warnings.get(0).toString();
+            Log.d(title, warn);
+        }
+
+        /* String warn = warnings.get(0).toString();
         Log.d("testing", warn);
         switch (warn) {
             case "warning-no":
@@ -99,7 +66,8 @@ public class Work implements Parcelable {
             default:
                 this.warnings = Warnings.EXTERNAL;
                 break;
-        }
+        } */
+        this.warnings = Warnings.EXTERNAL;
 
         // Parse for work's Status
         this.status = Status.UNKNOWN;
@@ -129,6 +97,35 @@ public class Work implements Parcelable {
         status = Status.valueOf(temp);
     }
 
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer(title);
+        str.append("\n(").append(author).append(")");
+
+        return str.toString();
+    }
+
+    //region Ratings
+    protected void setRating(String rate) {
+        switch (rate.toLowerCase()) {
+            case "general audiences":
+                this.rating = Rating.G;
+                break;
+            case "teen and up audiences":
+                this.rating = Rating.T;
+                break;
+            case "mature":
+                this.rating = Rating.M;
+                break;
+            case "explicit: only suitable for adults":
+                this.rating = Rating.E;
+                break;
+            default:
+                this.rating = Rating.N;
+                break;
+        }
+    }
+
     protected int getRatingColor()
     {
         // {G, T, M, E, N}
@@ -143,6 +140,34 @@ public class Work implements Parcelable {
                 return 0xFF990000;
             default:
                 return 0xFFf9f9f9;
+        }
+    }
+    //endregion
+
+    //region Category
+    protected void setCategory(String cat) {
+        switch (cat.toUpperCase()) {
+            case "F/F":
+                this.category = Category.FF;
+                break;
+            case "F/M":
+                this.category = Category.FM;
+                break;
+            case "M/M":
+                this.category = Category.MM;
+                break;
+            case "GEN":
+                this.category = Category.GEN;
+                break;
+            case "NO CATEGORY":
+                this.category = Category.NONE;
+                break;
+            case "OTHER":
+                this.category = Category.OTHER;
+                break;
+            default:
+                this.category = Category.MULTI;
+                break;
         }
     }
 
@@ -183,7 +208,9 @@ public class Work implements Parcelable {
                 return "";
         }
     }
+    //endregion
 
+    //region Warnings
     protected int getWarningsColor()
     {
         switch (warnings) {
@@ -211,7 +238,9 @@ public class Work implements Parcelable {
                 return "";
         }
     }
+    //endregion
 
+    //region Status
     protected int getStatusColor() {
         switch (status) {
             case WIP:
@@ -233,15 +262,9 @@ public class Work implements Parcelable {
                 return "";
         }
     }
+    //endregion
 
-    @Override
-    public String toString() {
-        StringBuffer str = new StringBuffer(title);
-        str.append("\n(").append(author).append(")");
-
-        return str.toString();
-    }
-
+    //region Parcelable implementation
     @Override
     public int describeContents() {
         return hashCode();
@@ -273,4 +296,5 @@ public class Work implements Parcelable {
             return new Work[size];
         }
     };
+    //endregion
 }
