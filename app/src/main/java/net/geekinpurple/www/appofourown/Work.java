@@ -11,10 +11,91 @@ import org.jsoup.select.Elements;
  * Created by Briannon on 2015-09-30.
  */
 public class Work implements Parcelable {
-    public static enum Rating {G, T, M, E, N}
-    public static enum Category {FF, FM, MM, GEN, OTHER, MULTI, NONE}
-    public static enum Warnings {UNSPECIFIED, YES, NONE, EXTERNAL}
-    public static enum Status {WIP, COMPLETE, UNKNOWN}
+    public enum Rating {
+        GENERAL (0xFF77a100, "G"),
+        TEEN (0xFFe6d200, "T"),
+        MATURE (0xFFe87604, "M"),
+        EXPLICIT (0xFF990000, "E"),
+        NOTRATED (0xFFf9f9f9, "N");
+
+        private final int color;
+        private final String symbol;
+        Rating(int c, String s) {
+            this.color = c;
+            this.symbol = s;
+        }
+
+        public int getColor() {
+            return color;
+        }
+        public String getSymbol() {
+            return symbol;
+        }
+    }
+
+    public enum Warnings {
+        CHOOSENOTTO (0xFFe87604, "\u203D"),
+        YES (0xFF990000, "!"),
+        NO (0xFFFFFFFF, " "),
+        EXTERNAL(0xFF026197, "\u2297");
+
+        private final int color;
+        private final String symbol;
+        Warnings(int c, String s) {
+            this.color = c;
+            this.symbol = s;
+        }
+
+        public int getColor() {
+            return color;
+        }
+        public String getSymbol() {
+            return symbol;
+        }
+    }
+    public enum Category {
+        FEMSLASH (0xFFa80016, "\u2640"),
+        HET (0xFF5e0a3c, "\u26A5"),
+        SLASH (0xFF0146ad, "\u2642"),
+        GEN (0xFF77a100, "\u2299"),
+        OTHER(0xFF000000, "\u2645"),
+        MULTI(0xFFe87604, "+"),
+        NONE(0xFFFFFFFF, " ");
+
+        private final int color;
+        private final String symbol;
+        Category(int c, String s) {
+            this.color = c;
+            this.symbol = s;
+        }
+
+        public int getColor() {
+            return color;
+        }
+        public String getSymbol() {
+            return symbol;
+        }
+    }
+
+    public enum Status {
+        NO (0xFF990000, "\u2298"),
+        YES (0xFF77a100, "\u2713"),
+        UNKNOWN (0xFFFFFFFF, " ");
+
+        private final int color;
+        private final String symbol;
+        Status(int c, String s) {
+            this.color = c;
+            this.symbol = s;
+        }
+
+        public int getColor() {
+            return color;
+        }
+        public String getSymbol() {
+            return symbol;
+        }
+    }
 
     protected String workUrl;
     protected String title;
@@ -36,41 +117,27 @@ public class Work implements Parcelable {
         this.author = workLinks.get(1).text();
         this.authorUrl = workLinks.get(1).attr("href");
 
-        // Parse for work's Rating
-        String rate = work.getElementsByClass("rating").get(0).text();
-        setRating(rate);
+        Element requiredTags = work.getElementsByClass("required-tags").get(0);
 
-        // Parse for work's Category (Ships)
-        String cat = work.getElementsByClass("category").get(0).text();
-        setCategory(cat);
+        // Parse for work's Rating
+        Element rating = requiredTags.getElementsByClass("rating").get(0);
+        String rate = parseClass(rating);
+        this.rating = Rating.valueOf(rate);
 
         // Parse for work's Warnings
-        Elements warnings = work.getElementsByClass("warnings");
-        for (Element warning : warnings) {
-            String warn = warnings.get(0).toString();
-            Log.d(title, warn);
-        }
+        Element warnings = requiredTags.getElementsByClass("warnings").get(0);
+        String warn = parseClass(warnings);
+        this.warnings = Warnings.valueOf(warn);
 
-        /* String warn = warnings.get(0).toString();
-        Log.d("testing", warn);
-        switch (warn) {
-            case "warning-no":
-                this.warnings = Warnings.NONE;
-                break;
-            case "warning-yes":
-                this.warnings = Warnings.YES;
-                break;
-            case "warning-choosenotto":
-                this.warnings = Warnings.UNSPECIFIED;
-                break;
-            default:
-                this.warnings = Warnings.EXTERNAL;
-                break;
-        } */
-        this.warnings = Warnings.EXTERNAL;
+        // Parse for work's Category (Ships)
+        Element category = requiredTags.getElementsByClass("category").get(0);
+        String cat = parseClass(category);
+        this.category = Category.valueOf(cat);
 
         // Parse for work's Status
-        this.status = Status.UNKNOWN;
+        Element status = requiredTags.getElementsByClass("iswip").get(0);
+        String state = parseClass(status);
+        this.status = Status.valueOf(state);
 
         Element desc = work.getElementsByClass("summary").get(0);
         this.summary = desc.text();
@@ -86,183 +153,14 @@ public class Work implements Parcelable {
 
         String temp = pkg.readString();
         rating = Rating.valueOf(temp);
-        Log.d("testing", rating.toString());
 
         category = Category.valueOf(pkg.readString());
-        Log.d("testing", category.toString());
 
         temp = pkg.readString();
         warnings = Warnings.valueOf(temp);
         temp = pkg.readString();
         status = Status.valueOf(temp);
     }
-
-    @Override
-    public String toString() {
-        StringBuffer str = new StringBuffer(title);
-        str.append("\n(").append(author).append(")");
-
-        return str.toString();
-    }
-
-    //region Ratings
-    protected void setRating(String rate) {
-        switch (rate.toLowerCase()) {
-            case "general audiences":
-                this.rating = Rating.G;
-                break;
-            case "teen and up audiences":
-                this.rating = Rating.T;
-                break;
-            case "mature":
-                this.rating = Rating.M;
-                break;
-            case "explicit: only suitable for adults":
-                this.rating = Rating.E;
-                break;
-            default:
-                this.rating = Rating.N;
-                break;
-        }
-    }
-
-    protected int getRatingColor()
-    {
-        // {G, T, M, E, N}
-        switch (rating) {
-            case G:
-                return 0xFF77a100;
-            case T:
-                return 0xFFe6d200;
-            case M:
-                return 0xFFe87604;
-            case E:
-                return 0xFF990000;
-            default:
-                return 0xFFf9f9f9;
-        }
-    }
-    //endregion
-
-    //region Category
-    protected void setCategory(String cat) {
-        switch (cat.toUpperCase()) {
-            case "F/F":
-                this.category = Category.FF;
-                break;
-            case "F/M":
-                this.category = Category.FM;
-                break;
-            case "M/M":
-                this.category = Category.MM;
-                break;
-            case "GEN":
-                this.category = Category.GEN;
-                break;
-            case "NO CATEGORY":
-                this.category = Category.NONE;
-                break;
-            case "OTHER":
-                this.category = Category.OTHER;
-                break;
-            default:
-                this.category = Category.MULTI;
-                break;
-        }
-    }
-
-    protected int getCategoryColor() {
-        switch (category) {
-            case FF:
-                return 0xFFa80016;
-            case FM:
-                return 0xFF5e0a3c;
-            case MM:
-                return 0xFF0146ad;
-            case GEN:
-                return 0xFF77a100;
-            case OTHER:
-                return 0xFF000000;
-            case MULTI:
-                return 0xFFe87604;
-            default:
-                return 0xFFFFFFFF;
-        }
-    }
-
-    protected String getCategorySymbol() {
-        switch (category) {
-            case FF:
-                return "\u2640";
-            case FM:
-                return "\u26A5";
-            case MM:
-                return "\u2642";
-            case GEN:
-                return "\u2299";
-            case OTHER:
-                return "\u2645";
-            case MULTI:
-                return "+";
-            default:
-                return "";
-        }
-    }
-    //endregion
-
-    //region Warnings
-    protected int getWarningsColor()
-    {
-        switch (warnings) {
-            case UNSPECIFIED:
-                return 0xFFe87604;
-            case YES:
-                return 0xFF990000;
-            case EXTERNAL:
-                return 0xFF026197;
-            default:
-                return 0xFFFFFFFF;
-        }
-    }
-
-    protected String getWarningsSymbol()
-    {
-        switch (warnings) {
-            case UNSPECIFIED:
-                return "\u203D";
-            case YES:
-                return "!";
-            case EXTERNAL:
-                return "\u2297";
-            default:
-                return "";
-        }
-    }
-    //endregion
-
-    //region Status
-    protected int getStatusColor() {
-        switch (status) {
-            case WIP:
-                return 0xFF990000;
-            case COMPLETE:
-                return 0xFF77a100;
-            default:
-                return 0xFFFFFFFF;
-        }
-    }
-
-    protected String getStatusSymbol() {
-        switch (status) {
-            case WIP:
-                return "\u2298";
-            case COMPLETE:
-                return "\u2713";
-            default:
-                return "";
-        }
-    }
-    //endregion
 
     //region Parcelable implementation
     @Override
@@ -296,5 +194,24 @@ public class Work implements Parcelable {
             return new Work[size];
         }
     };
+    //endregion
+
+    //region Utilities
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer(title);
+        str.append("\n(").append(author).append(")");
+
+        return str.toString();
+    }
+
+    private String parseClass(Element ele) {
+        String cl = ele.attr("class");
+        String[] clAr = cl.split(" ");
+        cl = clAr[0];
+        clAr = cl.split("-");
+        cl = clAr[1];
+        return cl.toUpperCase();
+    }
     //endregion
 }

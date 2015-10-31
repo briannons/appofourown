@@ -24,27 +24,27 @@ public class WorkInstance extends AppCompatActivity {
 
         // Set Rating Box Details
         TextView rating = (TextView) findViewById(R.id.rating);
-        rating.setText(work.rating.toString());
+        rating.setText(work.rating.getSymbol());
         rating.setTextColor(Color.WHITE);
-        rating.setBackgroundColor(work.getRatingColor());
-
-        // Set Category Box Details
-        TextView category = (TextView) findViewById(R.id.category);
-        category.setText(work.getCategorySymbol());
-        category.setTextColor(Color.WHITE);
-        category.setBackgroundColor(work.getCategoryColor());
+        rating.setBackgroundColor(work.rating.getColor());
 
         // Set Warnings Box Details
         TextView warnings = (TextView) findViewById(R.id.warnings);
-        warnings.setText(work.getWarningsSymbol());
+        warnings.setText(work.warnings.getSymbol());
         warnings.setTextColor(Color.WHITE);
-        warnings.setBackgroundColor(work.getWarningsColor());
+        warnings.setBackgroundColor(work.warnings.getColor());
+
+        // Set Category Box Details
+        TextView category = (TextView) findViewById(R.id.category);
+        category.setText(work.category.getSymbol());
+        category.setTextColor(Color.WHITE);
+        category.setBackgroundColor(work.category.getColor());
 
         // Set Status Box Details
         TextView status = (TextView) findViewById(R.id.status);
-        status.setText(work.getStatusSymbol());
+        status.setText(work.status.getSymbol());
         status.setTextColor(Color.WHITE);
-        status.setBackgroundColor(work.getStatusColor());
+        status.setBackgroundColor(work.status.getColor());
     }
 
     @Override
