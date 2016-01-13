@@ -1,8 +1,11 @@
 package net.geekinpurple.www.appofourown;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -28,8 +31,11 @@ public class Work implements Parcelable {
         public int getColor() {
             return color;
         }
-        public String getSymbol() {
-            return symbol;
+        public String getSymbol() { return symbol; }
+        public void setView(TextView v) {
+            v.setText(symbol);
+            v.setTextColor(Color.WHITE);
+            v.setBackgroundColor(color);
         }
     }
 
@@ -51,6 +57,11 @@ public class Work implements Parcelable {
         }
         public String getSymbol() {
             return symbol;
+        }
+        public void setView(TextView v) {
+            v.setText(symbol);
+            v.setTextColor(Color.WHITE);
+            v.setBackgroundColor(color);
         }
     }
     public enum Category {
@@ -75,6 +86,11 @@ public class Work implements Parcelable {
         public String getSymbol() {
             return symbol;
         }
+        public void setView(TextView v) {
+            v.setText(symbol);
+            v.setTextColor(Color.WHITE);
+            v.setBackgroundColor(color);
+        }
     }
 
     public enum Status {
@@ -94,6 +110,11 @@ public class Work implements Parcelable {
         }
         public String getSymbol() {
             return symbol;
+        }
+        public void setView(TextView v) {
+            v.setText(symbol);
+            v.setTextColor(Color.WHITE);
+            v.setBackgroundColor(color);
         }
     }
 
@@ -139,8 +160,13 @@ public class Work implements Parcelable {
         String state = parseClass(status);
         this.status = Status.valueOf(state);
 
-        Element desc = work.getElementsByClass("summary").get(0);
-        this.summary = desc.text();
+        if (work.hasClass("summary")) {
+            Element desc = work.getElementsByClass("summary").get(0);
+            this.summary = desc.text();
+        }
+        else {
+            this.summary = "";
+        }
     }
 
     // Reconstruct the Work from the Parcel

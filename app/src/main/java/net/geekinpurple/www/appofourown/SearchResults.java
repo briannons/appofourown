@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -22,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class SearchResults extends ListActivity {
-    ArrayAdapter result;
+    WorkInstanceArrayAdapter result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class SearchResults extends ListActivity {
         Intent intent = getIntent();
         String url = intent.getStringExtra(MainActivity.EXTRA_SEARCH_URL);
 
-        result = new ArrayAdapter(this, R.layout.individual_work, R.id.details);
+        result = new WorkInstanceArrayAdapter(this, R.layout.individual_work);
         new Retrieval().execute(url);
     }
 

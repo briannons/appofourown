@@ -8,8 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class WorkInstance extends AppCompatActivity {
 
     @Override
@@ -24,27 +22,19 @@ public class WorkInstance extends AppCompatActivity {
 
         // Set Rating Box Details
         TextView rating = (TextView) findViewById(R.id.rating);
-        rating.setText(work.rating.getSymbol());
-        rating.setTextColor(Color.WHITE);
-        rating.setBackgroundColor(work.rating.getColor());
+        work.rating.setView(rating);
 
         // Set Warnings Box Details
         TextView warnings = (TextView) findViewById(R.id.warnings);
-        warnings.setText(work.warnings.getSymbol());
-        warnings.setTextColor(Color.WHITE);
-        warnings.setBackgroundColor(work.warnings.getColor());
+        work.warnings.setView(warnings);
 
         // Set Category Box Details
         TextView category = (TextView) findViewById(R.id.category);
-        category.setText(work.category.getSymbol());
-        category.setTextColor(Color.WHITE);
-        category.setBackgroundColor(work.category.getColor());
+        work.category.setView(category);
 
         // Set Status Box Details
         TextView status = (TextView) findViewById(R.id.status);
-        status.setText(work.status.getSymbol());
-        status.setTextColor(Color.WHITE);
-        status.setBackgroundColor(work.status.getColor());
+        work.status.setView(status);
     }
 
     @Override
