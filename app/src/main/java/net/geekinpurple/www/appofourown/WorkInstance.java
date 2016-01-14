@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,19 +23,23 @@ public class WorkInstance extends AppCompatActivity {
 
         // Set Rating Box Details
         TextView rating = (TextView) findViewById(R.id.rating);
-        work.rating.setView(rating);
+        work.setView(work.rating, rating);
 
         // Set Warnings Box Details
         TextView warnings = (TextView) findViewById(R.id.warnings);
-        work.warnings.setView(warnings);
+        work.setView(work.warnings, warnings);
 
         // Set Category Box Details
         TextView category = (TextView) findViewById(R.id.category);
-        work.category.setView(category);
+        work.setView(work.category, category);
 
         // Set Status Box Details
         TextView status = (TextView) findViewById(R.id.status);
-        work.status.setView(status);
+        work.setView(work.status, status);
+
+        TextView summary = (TextView) findViewById(R.id.summary);
+        summary.setText(work.summary);
+        Log.d("testing", work.summary);
     }
 
     @Override

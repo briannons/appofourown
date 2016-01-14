@@ -30,22 +30,23 @@ public class WorkInstanceArrayAdapter extends ArrayAdapter<Work> {
         TextView title = (TextView) v.findViewById(R.id.title);
         title.setText(work.title);
         title.setTextColor(Color.BLACK);
+        title.setBackgroundColor(Color.WHITE);
 
         // Set Rating Box Details
         TextView rating = (TextView) v.findViewById(R.id.rating);
-        work.rating.setView(rating);
+        work.setView(work.rating, rating);
 
         // Set Warnings Box Details
         TextView warnings = (TextView) v.findViewById(R.id.warnings);
-        work.warnings.setView(warnings);
+        work.setView(work.warnings, warnings);
 
         // Set Category Box Details
         TextView category = (TextView) v.findViewById(R.id.category);
-        work.category.setView(category);
+        work.setView(work.category, category);
 
         // Set Status Box Details
         TextView status = (TextView) v.findViewById(R.id.status);
-        work.status.setView(status);
+        work.setView(work.status, status);
 
         return v;
     }
