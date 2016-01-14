@@ -37,7 +37,7 @@ public class Work implements Parcelable {
         public String getSymbol() { return symbol; }
     }
 
-    public enum Warnings implements Work.EnumView {
+    public enum Warnings implements EnumView {
         CHOOSENOTTO (0xFFe87604, "\u203D"),
         YES (0xFF990000, "!"),
         NO (0xFFFFFFFF, " "),
@@ -132,9 +132,10 @@ public class Work implements Parcelable {
         String state = parseClass(status);
         this.status = Status.valueOf(state);
 
-        if (work.hasClass("summary")) {
-            Element desc = work.getElementsByClass("summary").get(0);
-            Log.d("testing", desc.outerHtml() + "\n");
+        // Parse for work's Summary
+        Elements sums = work.getElementsByClass("summary");
+        if (sums.size() > 0) {
+            Element desc = sums.get(0);
             this.summary = desc.text();
         }
         else {
