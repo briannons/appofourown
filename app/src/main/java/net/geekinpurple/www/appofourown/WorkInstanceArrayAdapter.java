@@ -29,8 +29,6 @@ public class WorkInstanceArrayAdapter extends ArrayAdapter<Work> {
         Work work = getItem(pos);
         TextView title = (TextView) v.findViewById(R.id.title);
         title.setText(work.title);
-        title.setTextColor(Color.BLACK);
-        title.setBackgroundColor(Color.WHITE);
 
         // Set Rating Box Details
         TextView rating = (TextView) v.findViewById(R.id.rating);
