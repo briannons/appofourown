@@ -1,8 +1,11 @@
 package net.geekinpurple.www.appofourown;
 
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -11,7 +14,12 @@ import org.jsoup.select.Elements;
  * Created by Briannon on 2015-09-30.
  */
 public class Work implements Parcelable {
-    public enum Rating {
+    public interface EnumView {
+        int getColor();
+        String getSymbol();
+    }
+
+    public enum Rating implements EnumView {
         GENERAL (0xFF77a100, "G"),
         TEEN (0xFFe6d200, "T"),
         MATURE (0xFFe87604, "M"),
@@ -25,15 +33,11 @@ public class Work implements Parcelable {
             this.symbol = s;
         }
 
-        public int getColor() {
-            return color;
-        }
-        public String getSymbol() {
-            return symbol;
-        }
+        public int getColor() { return color; }
+        public String getSymbol() { return symbol; }
     }
 
-    public enum Warnings {
+    public enum Warnings implements EnumView {
         CHOOSENOTTO (0xFFe87604, "\u203D"),
         YES (0xFF990000, "!"),
         NO (0xFFFFFFFF, " "),
@@ -46,14 +50,10 @@ public class Work implements Parcelable {
             this.symbol = s;
         }
 
-        public int getColor() {
-            return color;
-        }
-        public String getSymbol() {
-            return symbol;
-        }
+        public int getColor() { return color; }
+        public String getSymbol() { return symbol; }
     }
-    public enum Category {
+    public enum Category implements EnumView {
         FEMSLASH (0xFFa80016, "\u2640"),
         HET (0xFF5e0a3c, "\u26A5"),
         SLASH (0xFF0146ad, "\u2642"),
@@ -69,15 +69,12 @@ public class Work implements Parcelable {
             this.symbol = s;
         }
 
-        public int getColor() {
-            return color;
-        }
-        public String getSymbol() {
-            return symbol;
-        }
+        public int getColor() { return color; }
+        public String getSymbol() { return symbol; }
+
     }
 
-    public enum Status {
+    public enum Status implements EnumView {
         NO (0xFF990000, "\u2298"),
         YES (0xFF77a100, "\u2713"),
         UNKNOWN (0xFFFFFFFF, " ");
@@ -89,12 +86,8 @@ public class Work implements Parcelable {
             this.symbol = s;
         }
 
-        public int getColor() {
-            return color;
-        }
-        public String getSymbol() {
-            return symbol;
-        }
+        public int getColor() { return color; }
+        public String getSymbol() { return symbol; }
     }
 
     protected String workUrl;
@@ -139,8 +132,16 @@ public class Work implements Parcelable {
         String state = parseClass(status);
         this.status = Status.valueOf(state);
 
-        Element desc = work.getElementsByClass("summary").get(0);
-        this.summary = desc.text();
+        // Parse for work's Summary
+        Elements sums = work.getElementsByClass("summary");
+        if (sums.size() > 0) {
+            Element desc = sums.get(0);
+            this.summary = desc.text();
+        }
+        else {
+            this.summary = "";
+        }
+        Log.d("testing", this.summary);
     }
 
     // Reconstruct the Work from the Parcel
@@ -212,6 +213,12 @@ public class Work implements Parcelable {
         clAr = cl.split("-");
         cl = clAr[1];
         return cl.toUpperCase();
+    }
+
+    public void setView(EnumView e, TextView v) {
+        v.setText(e.getSymbol());
+        v.setTextColor(Color.WHITE);
+        v.setBackgroundColor(e.getColor());
     }
     //endregion
 }

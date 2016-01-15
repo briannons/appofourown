@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 public class WorkInstance extends AppCompatActivity {
 
@@ -24,27 +23,23 @@ public class WorkInstance extends AppCompatActivity {
 
         // Set Rating Box Details
         TextView rating = (TextView) findViewById(R.id.rating);
-        rating.setText(work.rating.getSymbol());
-        rating.setTextColor(Color.WHITE);
-        rating.setBackgroundColor(work.rating.getColor());
+        work.setView(work.rating, rating);
 
         // Set Warnings Box Details
         TextView warnings = (TextView) findViewById(R.id.warnings);
-        warnings.setText(work.warnings.getSymbol());
-        warnings.setTextColor(Color.WHITE);
-        warnings.setBackgroundColor(work.warnings.getColor());
+        work.setView(work.warnings, warnings);
 
         // Set Category Box Details
         TextView category = (TextView) findViewById(R.id.category);
-        category.setText(work.category.getSymbol());
-        category.setTextColor(Color.WHITE);
-        category.setBackgroundColor(work.category.getColor());
+        work.setView(work.category, category);
 
         // Set Status Box Details
         TextView status = (TextView) findViewById(R.id.status);
-        status.setText(work.status.getSymbol());
-        status.setTextColor(Color.WHITE);
-        status.setBackgroundColor(work.status.getColor());
+        work.setView(work.status, status);
+
+        TextView summary = (TextView) findViewById(R.id.summary);
+        summary.setText(work.summary);
+        Log.d("testing", work.summary);
     }
 
     @Override

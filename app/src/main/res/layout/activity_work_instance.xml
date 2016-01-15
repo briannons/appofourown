@@ -17,13 +17,13 @@
             android:layout_height="wrap_content" >
 
             <TableRow>
-                <TextView android:id="@+id/rating" />
-                <TextView android:id="@+id/category" />
-            </TableRow>
-            <TableRow>
-                <TextView android:id="@+id/warnings" />
-                <TextView android:id="@+id/status" />
-            </TableRow>
+            <TextView android:id="@+id/rating" />
+            <TextView android:id="@+id/category" />
+        </TableRow>
+        <TableRow>
+            <TextView android:id="@+id/warnings" />
+            <TextView android:id="@+id/status" />
+        </TableRow>
 
         </TableLayout>
 
@@ -32,5 +32,8 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <TextView android:id="@+id/summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
