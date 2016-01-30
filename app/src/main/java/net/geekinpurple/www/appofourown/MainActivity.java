@@ -11,18 +11,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 
-import net.geekinpurple.www.appofourown.R;
-
 public class MainActivity extends ActionBarActivity {
-    protected final static String homeUrl = "https://archiveofourown.org";
+    protected final static String HOME_URL = "https://archiveofourown.org";
     public final static String EXTRA_SEARCH_URL = "net.geekinpurple.www.appofourown.QUERY";
 
     @Override
@@ -30,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Retrieval().execute(homeUrl);
+        new Retrieval().execute(HOME_URL);
     }
 
     @Override

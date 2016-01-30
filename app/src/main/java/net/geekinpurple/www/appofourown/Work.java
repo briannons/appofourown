@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import org.jsoup.nodes.Element;
@@ -14,6 +13,7 @@ import org.jsoup.select.Elements;
  * Created by Briannon on 2015-09-30.
  */
 public class Work implements Parcelable {
+    //region required 2x2 enums
     public interface EnumView {
         int getColor();
         String getSymbol();
@@ -53,6 +53,7 @@ public class Work implements Parcelable {
         public int getColor() { return color; }
         public String getSymbol() { return symbol; }
     }
+
     public enum Category implements EnumView {
         FEMSLASH (0xFFa80016, "\u2640"),
         HET (0xFF5e0a3c, "\u26A5"),
@@ -89,6 +90,7 @@ public class Work implements Parcelable {
         public int getColor() { return color; }
         public String getSymbol() { return symbol; }
     }
+    //endregion
 
     protected String workUrl;
     protected String title;
@@ -104,7 +106,7 @@ public class Work implements Parcelable {
         Elements workLinks = work.getElementsByTag("a");
         this.title = workLinks.get(0).text(); // work title
 
-        String urlString = MainActivity.homeUrl;
+        String urlString = MainActivity.HOME_URL;
         StringBuffer url = new StringBuffer(urlString);
         this.workUrl = url.append(workLinks.get(0).attr("href")).toString();
         this.author = workLinks.get(1).text();
@@ -113,24 +115,16 @@ public class Work implements Parcelable {
         Element requiredTags = work.getElementsByClass("required-tags").get(0);
 
         // Parse for work's Rating
-        Element rating = requiredTags.getElementsByClass("rating").get(0);
-        String rate = parseClass(rating);
-        this.rating = Rating.valueOf(rate);
+        this.rating = parseTag(Rating.class, requiredTags, "rating");
 
         // Parse for work's Warnings
-        Element warnings = requiredTags.getElementsByClass("warnings").get(0);
-        String warn = parseClass(warnings);
-        this.warnings = Warnings.valueOf(warn);
+        this.warnings = parseTag(Warnings.class, requiredTags, "warnings");
 
         // Parse for work's Category (Ships)
-        Element category = requiredTags.getElementsByClass("category").get(0);
-        String cat = parseClass(category);
-        this.category = Category.valueOf(cat);
+        this.category = parseTag(Category.class, requiredTags, "category");
 
         // Parse for work's Status
-        Element status = requiredTags.getElementsByClass("iswip").get(0);
-        String state = parseClass(status);
-        this.status = Status.valueOf(state);
+        this.status = parseTag(Status.class, requiredTags, "iswip");
 
         // Parse for work's Summary
         Elements sums = work.getElementsByClass("summary");
@@ -142,8 +136,17 @@ public class Work implements Parcelable {
             this.summary = "";
         }
         Log.d("testing", this.summary);
+
+        //Parse for work's Tags
+        Elements ships = work.getElementsByClass("relationships");
+        if (ships.size() > 0) {
+            for (Element e : ships) {
+
+            }
+        }
     }
 
+    //region Parcelable implementation
     // Reconstruct the Work from the Parcel
     public Work(Parcel pkg) {
         workUrl = pkg.readString();
@@ -163,7 +166,6 @@ public class Work implements Parcelable {
         status = Status.valueOf(temp);
     }
 
-    //region Parcelable implementation
     @Override
     public int describeContents() {
         return hashCode();
@@ -184,7 +186,6 @@ public class Work implements Parcelable {
     }
 
     public static final Parcelable.Creator<Work> CREATOR = new Parcelable.Creator<Work>() {
-
         @Override
         public Work createFromParcel(Parcel parcel) {
             return new Work(parcel);
@@ -200,25 +201,29 @@ public class Work implements Parcelable {
     //region Utilities
     @Override
     public String toString() {
-        StringBuffer str = new StringBuffer(title);
+        StringBuilder str = new StringBuilder(title);
         str.append("\n(").append(author).append(")");
 
         return str.toString();
-    }
-
-    private String parseClass(Element ele) {
-        String cl = ele.attr("class");
-        String[] clAr = cl.split(" ");
-        cl = clAr[0];
-        clAr = cl.split("-");
-        cl = clAr[1];
-        return cl.toUpperCase();
     }
 
     public void setView(EnumView e, TextView v) {
         v.setText(e.getSymbol());
         v.setTextColor(Color.WHITE);
         v.setBackgroundColor(e.getColor());
+    }
+
+    private <TTag extends Enum> TTag parseTag(Class<TTag> tagClass, Element requiredTags, String tag) {
+        Element ele = requiredTags.getElementsByClass(tag).get(0);
+
+        //parse Class
+        String cl = ele.attr("class");
+        String[] clAr = cl.split(" ");
+        cl = clAr[0];
+        clAr = cl.split("-");
+        cl = clAr[1];
+
+        return Enum.valueOf(tagClass, cl.toUpperCase());
     }
     //endregion
 }
