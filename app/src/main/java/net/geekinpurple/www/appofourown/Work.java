@@ -223,7 +223,7 @@ public class Work implements Parcelable {
         clAr = cl.split("-");
         cl = clAr[1];
 
-        return Enum.valueOf(tagClass, cl.toUpperCase());
+        return (TTag) Enum.valueOf(tagClass, cl.toUpperCase());
     }
     //endregion
 }
