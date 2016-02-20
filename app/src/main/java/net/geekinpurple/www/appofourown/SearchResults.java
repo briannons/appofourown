@@ -70,9 +70,10 @@ public class SearchResults extends ListActivity {
         @Override
         protected ArrayList<Work> doInBackground(String... params) {
             String url = params[0];
+            ArrayList<Work> worksList = new ArrayList<Work>();
             Document doc = WebPage.retrieve(url, this.getClass().toString());
             if (doc == null) {
-                return new ArrayList<Work>();
+                return worksList;
             }
 
             Elements works = doc.getElementsByClass("blurb");
@@ -80,7 +81,7 @@ public class SearchResults extends ListActivity {
             StringBuffer message = new StringBuffer();
 
             // Build the array to hand to ArrayAdapter
-            ArrayList<Work> worksList = new ArrayList<Work>();
+            worksList = new ArrayList<Work>();
             for (Element work : works) {
                 Work w = new Work(work);
                 worksList.add(w);

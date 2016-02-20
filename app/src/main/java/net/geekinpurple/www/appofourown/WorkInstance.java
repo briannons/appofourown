@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 public class WorkInstance extends AppCompatActivity {
@@ -63,4 +66,23 @@ public class WorkInstance extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //region Utilities
+    private void tagHelper(SpannableStringBuilder build, String href, String tag) {
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            public void onClick(View v) {
+                // TODO: throw to search results-esque page for tags
+                return;
+            }
+        };
+
+        if (build.length() > 0) {
+            build.append(", ");
+        }
+        int len = build.length();
+        build.append(tag);
+        build.setSpan(clickableSpan, len, build.length(), 0);
+    }
+
+    //endregion
 }
